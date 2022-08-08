@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -20,13 +19,9 @@ public class DataService {
 
     private static final String path = "D:\\UsersOutput.CSV";
 
-    public void readData() throws IOException {
-        FileInputStream inputStream = null;
-        Scanner sc = null;
+    public void readData() {
 
-        try {
-            inputStream = new FileInputStream(path);
-            sc = new Scanner(inputStream, StandardCharsets.UTF_8);
+        try (FileInputStream inputStream = new FileInputStream(path); Scanner sc = new Scanner(inputStream, StandardCharsets.UTF_8)) {
 
             var buff = new ArrayList<String>();
             var nameFields = false;
@@ -48,18 +43,12 @@ public class DataService {
             if (sc.ioException() != null) throw sc.ioException();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (inputStream != null) inputStream.close();
-            if (sc != null) sc.close();
         }
     }
 
     private void writeData(ArrayList<String> texts) {
         var dats = EntityParser.parsing(texts);
-        var t = dataRepository.findAll();
-        var d = dataRepository.getDataById(new BigInteger("11")).get();
         dataRepository.save(dats.get(0));
-//        dataRepository.saveAll(dats);
         var a = dataRepository.findAll();
         var c = 0;
     }

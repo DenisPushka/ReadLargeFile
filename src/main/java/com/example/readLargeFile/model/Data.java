@@ -18,8 +18,8 @@ import java.util.UUID;
 
 @lombok.Data
 @Entity
-//@Table(name = "receive_data")
-@Table(name = "buffer")
+@Table(name = "receive_data")
+//@Table(name = "buffer")
 @AllArgsConstructor
 @NoArgsConstructor
 @TypeDefs({
@@ -45,19 +45,19 @@ public class Data {
     @ToString.Exclude
     @ElementCollection
     @Type(type = "uuid-array")
-    @Column(
+    @OrderColumn(
             name = "number_2",
             columnDefinition = "uuid[]"
     )
-    private List<UUID> numberList = new ArrayList<>();
+    private UUID[] arrayNumber;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @ElementCollection
     @Type(type = "string-array")
-    @Column(
+    @OrderColumn(
             name = "text_array",
             columnDefinition = "text[]"
     )
-    private List<String> textList = new ArrayList<>();
+    private String[] arrayText;
 }

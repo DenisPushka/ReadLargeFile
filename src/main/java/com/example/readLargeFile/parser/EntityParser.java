@@ -21,13 +21,15 @@ public class EntityParser {
             var name = buffArray.get(0);
             var text = buffArray.get(1);
             var number = new BigInteger(buffArray.get(2));
-            var numberList = fillListUUID();
-            var i = numberList.size() == 0 ? 1 : numberList.size();
+            var arrayUUID = fillArrayUUID();
+            var l = arrayUUID.length;
+            var i = l == 0 ? 1 : l;
             var count = 4 + i;
-            var textList = fillListText(count);
+            var arrayText = fillArrayText(count);
+
             var id = new BigInteger(buffArray.get(buffArray.size() - 1));
             buffArray.clear();
-            dats.add(new Data(id, name, text, number, numberList, textList));
+            dats.add(new Data(id, name, text, number, arrayUUID, arrayText));
         }
 
         return dats;
@@ -48,15 +50,15 @@ public class EntityParser {
         }
     }
 
-    private static ArrayList<UUID> fillListUUID() {
+    private static UUID[] fillArrayUUID() {
         var numberList = new ArrayList<UUID>();
         if (buffArray.get(3).equals("{"))
-            return numberList;
+            return numberList.toArray(new UUID[0]);
 
         numberList.add(UUID.fromString(buffArray.get(3).substring(1)));
 
         if (buffArray.get(4).equals("}"))
-            return numberList;
+            return numberList.toArray(new UUID[0]);
 
         for (var i = 4; i < buffArray.size(); i++) {
             if (buffArray.get(i).indexOf('}') != -1) {
@@ -65,18 +67,19 @@ public class EntityParser {
             }
             numberList.add(UUID.fromString(buffArray.get(i)));
         }
-        return numberList;
+
+        return numberList.toArray(UUID[]::new);
     }
 
-    private static ArrayList<String> fillListText(int count) {
+    private static String[] fillArrayText(int count) {
         var textList = new ArrayList<String>();
 
         if (buffArray.get(3).equals("{"))
-            return textList;
+            return textList.toArray(new String[0]);
         textList.add(buffArray.get(count).substring(1));
 
         if (buffArray.get(4).equals("}"))
-            return textList;
+            return textList.toArray(new String[0]);
 
         for (var i = count + 1; i < buffArray.size(); i++) {
             if (buffArray.get(i).indexOf('}') != -1) {
@@ -85,6 +88,7 @@ public class EntityParser {
             }
             textList.add(buffArray.get(i));
         }
-        return textList;
+
+        return textList.toArray(new String[0]);
     }
 }

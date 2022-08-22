@@ -18,7 +18,7 @@ public class testMain {
         if (connection.isEmpty()) {
             String url = "jdbc:postgresql://localhost:5432/TEST_JAVA";
             String user = "postgres";
-            String password = "***";
+            String password = "ogr84Bqk3";
 
             try {
                 connection = Optional.ofNullable(DriverManager.getConnection(url, user, password));
@@ -26,6 +26,7 @@ public class testMain {
                 LOGGER.log(Level.SEVERE, null, ex);
             }
         }
+        get();
         return connection;
     }
 

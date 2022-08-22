@@ -1,9 +1,10 @@
 package com.example.readLargeFile.parser;
 
-import com.example.readLargeFile.model.Data;
+import com.example.readLargeFile.model.Information;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class EntityParser {
@@ -11,8 +12,8 @@ public class EntityParser {
     private static final ArrayList<String> buffArray = new ArrayList<>();
     private static final StringBuilder buffWord = new StringBuilder();
 
-    public static ArrayList<Data> parsing(ArrayList<String> texts) {
-        var dats = new ArrayList<Data>();
+    public static ArrayList<Information> parsing(ArrayList<String> texts) {
+        var dats = new ArrayList<Information>();
         var iterator = texts.stream().iterator();
 
         while (iterator.hasNext()){
@@ -21,15 +22,15 @@ public class EntityParser {
             var name = buffArray.get(0);
             var text = buffArray.get(1);
             var number = new BigInteger(buffArray.get(2));
-            var arrayUUID = fillArrayUUID();
-            var l = arrayUUID.length;
+            var uuidList = fillArrayUUID();
+            var l = uuidList.size();
             var i = l == 0 ? 1 : l;
             var count = 4 + i;
-            var arrayText = fillArrayText(count);
+            var stringList = fillArrayText(count);
 
             var id = new BigInteger(buffArray.get(buffArray.size() - 1));
             buffArray.clear();
-            dats.add(new Data(id, name, text, number, arrayUUID, arrayText));
+            dats.add(new Information(id, name, text, number, uuidList, stringList));
         }
 
         return dats;
@@ -50,15 +51,15 @@ public class EntityParser {
         }
     }
 
-    private static UUID[] fillArrayUUID() {
+    private static List<UUID> fillArrayUUID() {
         var numberList = new ArrayList<UUID>();
         if (buffArray.get(3).equals("{"))
-            return numberList.toArray(new UUID[0]);
+            return numberList;
 
         numberList.add(UUID.fromString(buffArray.get(3).substring(1)));
 
         if (buffArray.get(4).equals("}"))
-            return numberList.toArray(new UUID[0]);
+            return numberList;
 
         for (var i = 4; i < buffArray.size(); i++) {
             if (buffArray.get(i).indexOf('}') != -1) {
@@ -68,18 +69,18 @@ public class EntityParser {
             numberList.add(UUID.fromString(buffArray.get(i)));
         }
 
-        return numberList.toArray(UUID[]::new);
+        return numberList;
     }
 
-    private static String[] fillArrayText(int count) {
+    private static List<String> fillArrayText(int count) {
         var textList = new ArrayList<String>();
 
         if (buffArray.get(3).equals("{"))
-            return textList.toArray(new String[0]);
+            return textList;
         textList.add(buffArray.get(count).substring(1));
 
         if (buffArray.get(4).equals("}"))
-            return textList.toArray(new String[0]);
+            return textList;
 
         for (var i = count + 1; i < buffArray.size(); i++) {
             if (buffArray.get(i).indexOf('}') != -1) {
@@ -89,6 +90,6 @@ public class EntityParser {
             textList.add(buffArray.get(i));
         }
 
-        return textList.toArray(new String[0]);
+        return textList;
     }
 }

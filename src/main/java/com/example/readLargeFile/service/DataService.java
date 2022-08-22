@@ -1,5 +1,6 @@
 package com.example.readLargeFile.service;
 
+import com.example.readLargeFile.connect.Connect;
 import com.example.readLargeFile.parser.EntityParser;
 import com.example.readLargeFile.repository.DataRepository;
 import lombok.AllArgsConstructor;
@@ -15,14 +16,10 @@ import java.util.Scanner;
 @AllArgsConstructor
 public class DataService {
     private final DataRepository dataRepository;
-
-
     private static final String path = "D:\\UsersOutput.CSV";
 
     public void readData() {
-
         try (FileInputStream inputStream = new FileInputStream(path); Scanner sc = new Scanner(inputStream, StandardCharsets.UTF_8)) {
-
             var buff = new ArrayList<String>();
             var nameFields = false;
 
@@ -40,6 +37,7 @@ public class DataService {
                 buff.add(line);
             }
 
+            System.out.println("*** THE END ***");
             if (sc.ioException() != null) throw sc.ioException();
         } catch (IOException e) {
             e.printStackTrace();
@@ -48,8 +46,7 @@ public class DataService {
 
     private void writeData(ArrayList<String> texts) {
         var dats = EntityParser.parsing(texts);
-        dataRepository.save(dats.get(0));
-        var a = dataRepository.findAll();
-        var c = 0;
+        dataRepository.saveAll(dats);
+        Connect.get(dats);
     }
 }

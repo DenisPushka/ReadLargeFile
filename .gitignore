@@ -2,3 +2,7 @@
 /target/
 local.properties
 .properties
+
+project.properties
+*.properties
+application.properties
